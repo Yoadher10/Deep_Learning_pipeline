@@ -1,0 +1,40 @@
+# Python dependencies for the fish direction / pose pipeline.
+#
+#   python3 -m venv .venv
+#   source .venv/bin/activate            # Windows: .venv\Scripts\activate
+#   pip install -r requirements.txt
+#
+# Also required, but NOT pip-installable (install with your OS package manager):
+#   * ffmpeg + ffprobe   -> phase 0 frame extraction
+#       macOS:  brew install ffmpeg
+#       Ubuntu: sudo apt install ffmpeg
+#       Windows: https://ffmpeg.org/download.html  (add to PATH)
+#   * Tkinter            -> the GUIs (ships with the python.org installers and
+#                           most distros; on Ubuntu: sudo apt install python3-tk)
+#
+# GPU note: the versions below install a CPU/GPU build appropriate for your
+# platform. For a specific CUDA build of PyTorch, follow
+# https://pytorch.org/get-started/locally/ and install torch/torchvision first,
+# then run this file. Training was done on CUDA 12.8 / torch 2.11; inference has
+# also been run on Apple MPS and CPU.
+#
+# Lower bounds below are the versions the pipeline has been run against
+# (roughly: torch 2.11-2.13, transformers 5.x, numpy 2.x, pandas 3.x). Older
+# major versions of numpy/pandas/transformers are NOT supported.
+
+# --- deep learning ---
+torch>=2.2
+torchvision>=0.17
+transformers>=5.0
+
+# --- object detection (phase 1) ---
+ultralytics>=8.3
+
+# --- imaging / data ---
+opencv-python>=4.8
+pillow>=10.0
+numpy>=2.0
+pandas>=2.2
+
+# --- phase 3 result pie charts ---
+matplotlib>=3.7

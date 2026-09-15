@@ -1,0 +1,31 @@
+# Virtual environment
+.venv/
+venv/
+env/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+
+# OS cruft
+.DS_Store
+Thumbs.db
+
+# Data / runs (large, external, not part of the code submission)
+# See README.md "Configuring paths" -- point FISH_PIPELINE_DATA elsewhere
+# instead of storing data under the repo. This still ignores it if you do.
+data/
+*.mp4
+*.mov
+*.avi
+
+# Editor/IDE
+.vscode/
+.idea/
+*.swp
+
+# Training logs / large local artifacts (not the bundled inference weights)
+model_training/*/runs/
+model_training/*/wandb/

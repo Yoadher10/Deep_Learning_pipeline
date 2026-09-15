@@ -1,0 +1,12 @@
+# Ultralytics dataset definition for the fish detector.
+# Copy to data.yaml and edit the paths, then run train_yolo.py.
+
+# Root folder that contains the images/ and labels/ subfolders
+path: /absolute/path/to/yolo_dataset
+
+train: images/train
+val: images/val
+
+# Single class: fish
+names:
+  0: fish

@@ -1,0 +1,62 @@
+======================================================================
+ViT direction + pose classifier — training run for best_model_v7.pt
+======================================================================
+Trained on a Windows / NVIDIA RTX 2060 SUPER (8 GB) box, CUDA 12.8,
+PyTorch 2.11, mixed precision.
+
+CONFIG
+----------------------------------------------------------------------
+Backbone            : google/vit-base-patch16-224-in21k
+Heads               : 9-class direction + 2-class pose (shared backbone)
+Batch size          : 64
+Max epochs          : 60   (early-stop patience 10)
+Learning rate       : 2e-5
+Pose class weights  : [1.0, 2.2]     (Regular : Upside-down)
+Augmentation        : ColorJitter + GaussianBlur(p=0.10) + horizontal flip
+                      (train split only; direction label mirrored, pose kept;
+                      NO vertical flip — see README "What we tried")
+
+DATASET
+----------------------------------------------------------------------
+Train 4144 / Val 893 / Test 894
+Temporal-chunk split (chunk = frame_id // 150) so consecutive video frames
+never straddle train/val/test. Pose labels: ~3862 regular / ~796 upside-down
+across the whole set (upside-down mined from real runs, no synthetic flips).
+
+RESULT
+----------------------------------------------------------------------
+Early stopped at epoch 28.
+Best epoch          : 18
+Best validation loss: 0.4195
+Pure training time  : ~15m 52s   (wall ~17m 29s)
+
+FINAL TEST SET (best_model_v7.pt, epoch 18)
+----------------------------------------------------------------------
+Loss                : 0.4816
+Direction accuracy  : 88.26%
+Direction macro F1  : 0.8340
+Pose accuracy       : 98.47%
+Pose macro F1       : 0.9731
+Regular recall      : 98.66%
+Upside-down recall  : 97.52%   (n = 121)
+
+DIRECTION PER-CLASS RECALL
+----------------------------------------------------------------------
+0 No Fish :  96.15%  (75/78)
+1 N       :  74.36%  (58/78)
+2 NE      :  94.21%  (114/121)
+3 E       :  77.97%  (92/118)
+4 SE      :  94.74%  (162/171)
+5 S       :  38.10%  (8/21)      <- rare class, n=21
+6 SW      :  96.72%  (59/61)
+7 W       :  78.43%  (40/51)
+8 NW      :  92.82%  (181/195)
+
+NOTES
+----------------------------------------------------------------------
+- Test val/test crops come from the same source videos as training (no fully
+  held-out video), so these numbers track training progress but are not a
+  generalisation guarantee. Real evaluation is a manually reviewed inference
+  run on a new video.
+- The pose head still over-calls upside-down for fish at oblique angles on real
+  runs; phase 3 mitigates this with config.UPSIDE_DOWN_CONF_THRESHOLD.

@@ -1,0 +1,5 @@
+# Trained model weights are large binaries; track them with Git LFS so a
+# normal `git clone` doesn't blow past GitHub's 100MB per-file hard limit
+# (best_model_v7.pt is ~330MB). Requires `git lfs install` once per machine
+# before the first `git add` of a .pt file -- see README.md "Setup".
+*.pt filter=lfs diff=lfs merge=lfs -text
