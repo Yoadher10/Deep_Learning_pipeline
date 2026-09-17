@@ -178,34 +178,91 @@ how those scripts' `--images` / `--splits-dir` flags reach them.
 
 ## Running the inference pipeline
 
-Easiest: `python run_pipeline_gui.py`.
+### The GUI (recommended)
 
-1. **Start from** — pick the phase to begin at (0 video · 1 frames folder ·
-   2 ROI-crops folder · 3 predictions folder).
-2. **Browse…** — one button; the dialog matches the chosen start phase.
-3. For a video, pick a sampling fps (the GUI shows the estimated frame count and
-   a recommended value).
-4. **Run pipeline** — the remaining phases run in order.
+From the repo root, with the venv active:
 
-Every run writes to its own timestamped folder,
-`<data root>/runs/<name>_<YYYYmmdd-HHMMSS>/`, so repeated runs never overwrite.
+```bash
+python run_pipeline_gui.py
+```
 
-- **One overall progress bar** with **tick marks at each phase boundary** and the
+No arguments, no environment setup: if `FISH_PIPELINE_DATA` is unset it creates
+`data/runs/<name>_<timestamp>/` for you. The window is
+[appendix 5](#5-pipeline-gui-results-tab).
+
+**Walkthrough — video to charts:**
+
+1. **Start from** (top row) — pick the phase to begin at. Phase 0 takes a video
+   file; phase 1 a folder of frames; phase 2 a folder of ROI crops; phase 3 a
+   folder of predictions. Use this to resume: if classification succeeded and
+   you only want to redo the report, start from phase 3 and point it at the
+   existing `predictions/` folder instead of re-running everything.
+2. **Browse…** — one button, and the dialog matches the phase you chose (a file
+   picker for phase 0, a folder picker otherwise). For a video, the box below
+   fills with the ffprobe readout: resolution, duration, frame rate, total
+   frames.
+3. **Sampling frame rate** — only for phase 0. Each option shows how many frames
+   it would actually push through detection and classification, and one is
+   starred as **recommended** (the rate that lands nearest
+   `config.TARGET_FRAMES`, capped at the video's own fps). There's a **Custom
+   fps** box if none of the presets fit. Higher fps means more crops and a
+   longer run, not better per-crop accuracy — consecutive frames are nearly
+   identical.
+4. **Run pipeline** — every remaining phase runs in order. **Stop** (or closing
+   the window) terminates the running phase and its children.
+
+**While it runs:**
+
+- **One overall progress bar**, with tick marks at each phase boundary and the
   phase name on each segment. It's weighted by phase and driven by sub-step
-  events the scripts emit: ffmpeg frame count, model loading, per-frame
-  detection, per-batch classification, chart rendering.
-- The line under the bar shows the current sub-step with a **live rate and ETA**
-  (e.g. `classifying 2000/4000 · 46/s · ETA 0m43s`).
-- The active **device** (CUDA / MPS / CPU) is shown in bold and per phase.
-- **Results tab** — the phase-3 pie charts (fish vs no-fish, direction
-  distribution, pose, upside-down by direction) plus the text summary, with an
-  "Open results folder" button.
-- **Sort crops tab** — runs `dataset_ops/sort_crops_by_class.py` on a finished
-  run: pick the run folder and it sorts the ROI crops into per-class /
-  per-direction folders, splitting `upside_down/` into `high_conf/` and
-  `low_conf/` for review.
+  events the scripts emit — ffmpeg frame count, model loading, per-frame
+  detection, per-batch classification, chart rendering — so it doesn't stall at
+  one number through a long phase.
+- The line under the bar shows the current sub-step with a live rate and ETA,
+  e.g. `classifying 2000/4000 · 46/s · ETA 0m43s`.
+- The active **device** (CUDA / MPS / CPU) is shown in bold next to the buttons
+  and again per phase. If this says CPU on a machine with a GPU, see
+  *Device (GPU) selection* above.
 
-Or run the stages by hand:
+**The three tabs:**
+
+| Tab | What it's for |
+|---|---|
+| **Log** | Raw stdout/stderr of each phase, which is where an ffmpeg or CUDA error will actually appear. Check here first when a phase fails. |
+| **Results** | The four phase-3 charts inline plus the text summary, with an **Open results folder** button. Populates when phase 3 finishes. |
+| **Sort crops** | Runs `dataset_ops/sort_crops_by_class.py` on a finished run — see below. |
+
+**Sort crops tab.** Point it at a run folder and it fills in `rois/`,
+`predictions/` and an output folder for you; or fill the three in by hand. It
+copies (or **moves**, if you tick that) each crop into
+`<output>/{no_fish, regular, upside_down, pose_not_applicable}/<DIRECTION>/`,
+with `upside_down/` further split into `high_conf/` and `low_conf/` at the
+confidence threshold in the box — which defaults to
+`config.UPSIDE_DOWN_CONF_THRESHOLD` (0.85), the same gate phase 3 applies, so
+`high_conf/` is exactly the set of crops counted as upside down in
+`summary.json`. This is the fastest way to eyeball whether a class is coherent
+([appendix 7–9](#sorted-crop-folders)). The other options — **Flat** (no
+per-direction sub-folders), **raw pose head** (score pose even for N/S fish),
+and **single `upside_down/` bucket** — map one-to-one onto the script's
+`--flat`, `--use-raw-pose` and `--no-upside-conf-split` flags.
+
+**Where output goes.** Every run writes to its own timestamped folder,
+`<data root>/runs/<name>_<YYYYmmdd-HHMMSS>/`, so repeated runs never overwrite
+each other:
+
+```
+runs/clip_20260917-160002/
+├── frames/                    phase 0
+├── rois/                      phase 1 — kept crops
+├── rois_ignored_background/   phase 1 — crops the background filter rejected
+├── boxes.csv                  phase 1 — every box + its background match %
+├── median_background.png      phase 1 — the background image it compared against
+├── predictions/               phase 2 — one JSON per crop
+├── summary.json / summary.txt phase 3
+└── charts/                    phase 3
+```
+
+### Or run the stages by hand
 
 ```bash
 # Phase 0 — video → PNG frames at a chosen sampling rate

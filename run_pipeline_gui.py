@@ -260,7 +260,10 @@ class SortPanel(ttk.Frame):
         self.flat = tk.BooleanVar(value=False)
         self.raw_pose = tk.BooleanVar(value=False)
         self.no_conf_split = tk.BooleanVar(value=False)
-        self.conf_threshold = tk.StringVar(value="0.95")
+        # Same gate phase 3 and the review tools use, so the folders you
+        # review match the numbers in summary.json.
+        self.conf_threshold = tk.StringVar(
+            value=f"{config.UPSIDE_DOWN_CONF_THRESHOLD:g}")
 
         intro = ("Point this at a finished run folder (or fill the three folders "
                  "by hand). Crops are copied into <output>/{no_fish, regular, "

@@ -21,8 +21,14 @@ further split into per-direction sub-folders, e.g.
 The upside_down/ bucket is additionally split by pose confidence, so a
 human can review the confident calls first:
 
-    upside_down/high_conf/NE/   pose_confidence >= threshold (default 0.95)
+    upside_down/high_conf/NE/   pose_confidence >= threshold
     upside_down/low_conf/NE/    pose_confidence <  threshold
+
+The threshold defaults to config.UPSIDE_DOWN_CONF_THRESHOLD (0.85) — the same
+gate phase 3 applies when it folds low-confidence upside-down calls back into
+"Regular". Keeping them equal is what makes high_conf/ the exact set of crops
+counted as upside down in summary.json, and low_conf/ the set that was
+downgraded; override with --upside-conf-threshold to review a different cut.
 
     python sort_crops_by_class.py
     python sort_crops_by_class.py --rois DIR --predictions DIR --output DIR
@@ -83,7 +89,8 @@ def classify(prediction: dict, use_raw_pose: bool) -> str:
 def sort_crops(rois_dir: Path, predictions_dir: Path, output_dir: Path,
                move: bool, by_direction: bool, use_raw_pose: bool,
                split_upside_conf: bool = True,
-               upside_conf_threshold: float = 0.95) -> None:
+               upside_conf_threshold: float = config.UPSIDE_DOWN_CONF_THRESHOLD
+               ) -> None:
     if not rois_dir.is_dir():
         raise FileNotFoundError(f"ROI folder not found: {rois_dir}")
     if not predictions_dir.is_dir():
