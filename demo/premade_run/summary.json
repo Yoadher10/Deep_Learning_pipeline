@@ -1,0 +1,1146 @@
+{
+  "totals": {
+    "crops": 4177,
+    "no_fish": 65,
+    "fish": 4112,
+    "percent_no_fish": 1.56,
+    "mean_direction_confidence_fish": 0.8803
+  },
+  "direction_distribution": [
+    {
+      "direction": 1,
+      "name": "N",
+      "count": 667,
+      "percent_of_fish": 16.22,
+      "mean_direction_confidence": 0.9146
+    },
+    {
+      "direction": 2,
+      "name": "NE",
+      "count": 456,
+      "percent_of_fish": 11.09,
+      "mean_direction_confidence": 0.8899
+    },
+    {
+      "direction": 3,
+      "name": "E",
+      "count": 593,
+      "percent_of_fish": 14.42,
+      "mean_direction_confidence": 0.8724
+    },
+    {
+      "direction": 4,
+      "name": "SE",
+      "count": 505,
+      "percent_of_fish": 12.28,
+      "mean_direction_confidence": 0.9019
+    },
+    {
+      "direction": 5,
+      "name": "S",
+      "count": 528,
+      "percent_of_fish": 12.84,
+      "mean_direction_confidence": 0.8233
+    },
+    {
+      "direction": 6,
+      "name": "SW",
+      "count": 325,
+      "percent_of_fish": 7.9,
+      "mean_direction_confidence": 0.867
+    },
+    {
+      "direction": 7,
+      "name": "W",
+      "count": 443,
+      "percent_of_fish": 10.77,
+      "mean_direction_confidence": 0.866
+    },
+    {
+      "direction": 8,
+      "name": "NW",
+      "count": 595,
+      "percent_of_fish": 14.47,
+      "mean_direction_confidence": 0.8928
+    }
+  ],
+  "pose": {
+    "posed_crops": 2917,
+    "confidence_threshold": 0.85,
+    "regular": 2684,
+    "upside_down": 233,
+    "percent_upside_down": 7.99,
+    "mean_upside_down_confidence": 0.9662,
+    "pose_head_regular": 2611,
+    "pose_head_upside_down": 306,
+    "upside_down_below_threshold": 73,
+    "upside_confidence_histogram": [
+      {
+        "range": "0.50-0.60",
+        "count": 25,
+        "above_threshold": false
+      },
+      {
+        "range": "0.60-0.70",
+        "count": 17,
+        "above_threshold": false
+      },
+      {
+        "range": "0.70-0.80",
+        "count": 24,
+        "above_threshold": false
+      },
+      {
+        "range": "0.80-0.90",
+        "count": 18,
+        "above_threshold": false
+      },
+      {
+        "range": "0.90-0.85",
+        "count": 0,
+        "above_threshold": true
+      },
+      {
+        "range": "0.85-1.00",
+        "count": 222,
+        "above_threshold": true
+      }
+    ],
+    "frames_with_upside_down": 228,
+    "frames_with_upside_down_detail": [
+      {
+        "frame_id": 13,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 26,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 27,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 30,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 35,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 45,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 56,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 70,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 71,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 72,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 73,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 75,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 76,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 77,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 79,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 80,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 81,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 87,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 88,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 89,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 90,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 91,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 93,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 94,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 95,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 96,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 97,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 98,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 99,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 100,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 101,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 102,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 103,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 104,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 106,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 117,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 140,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 143,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 144,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 145,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 146,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 148,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 149,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 150,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 151,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 152,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 153,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 154,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 166,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 167,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 168,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 170,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 172,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 174,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 175,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 178,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 179,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 180,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 181,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 182,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 183,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 184,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 185,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 186,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 187,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 188,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 195,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 196,
+        "upside_down_fish": 2
+      },
+      {
+        "frame_id": 197,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 198,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 199,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 201,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 202,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 203,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 205,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 206,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 207,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 208,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 212,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 214,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 225,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 226,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 229,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 230,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 231,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 232,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 233,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 238,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 239,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 240,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 241,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 242,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 243,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 244,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 246,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 247,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 248,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 249,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 250,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 256,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 258,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 259,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 260,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 261,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 264,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 266,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 267,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 268,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 269,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 270,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 271,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 272,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 286,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 298,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 307,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 310,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 315,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 323,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 332,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 335,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 336,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 338,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 339,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 340,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 341,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 342,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 343,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 344,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 345,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 346,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 347,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 350,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 351,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 353,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 354,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 355,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 356,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 357,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 358,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 383,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 393,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 394,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 403,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 406,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 407,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 408,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 409,
+        "upside_down_fish": 2
+      },
+      {
+        "frame_id": 411,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 412,
+        "upside_down_fish": 2
+      },
+      {
+        "frame_id": 413,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 416,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 417,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 418,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 419,
+        "upside_down_fish": 2
+      },
+      {
+        "frame_id": 420,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 421,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 422,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 423,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 424,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 425,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 426,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 427,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 428,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 429,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 430,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 431,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 432,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 438,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 445,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 447,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 448,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 449,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 450,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 451,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 453,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 454,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 455,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 456,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 458,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 459,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 460,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 461,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 463,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 465,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 466,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 467,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 468,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 469,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 470,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 472,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 473,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 474,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 475,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 494,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 503,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 504,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 505,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 508,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 509,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 510,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 511,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 513,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 514,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 515,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 518,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 520,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 522,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 523,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 524,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 525,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 526,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 533,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 536,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 537,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 538,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 546,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 567,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 568,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 569,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 579,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 583,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 587,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 588,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 629,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 640,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 690,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 700,
+        "upside_down_fish": 1
+      },
+      {
+        "frame_id": 745,
+        "upside_down_fish": 2
+      }
+    ],
+    "upside_down_by_direction": [
+      {
+        "direction": 2,
+        "name": "NE",
+        "upside_down": 63,
+        "posed_total": 456,
+        "percent_upside_down": 13.82
+      },
+      {
+        "direction": 3,
+        "name": "E",
+        "upside_down": 64,
+        "posed_total": 593,
+        "percent_upside_down": 10.79
+      },
+      {
+        "direction": 4,
+        "name": "SE",
+        "upside_down": 10,
+        "posed_total": 505,
+        "percent_upside_down": 1.98
+      },
+      {
+        "direction": 6,
+        "name": "SW",
+        "upside_down": 42,
+        "posed_total": 325,
+        "percent_upside_down": 12.92
+      },
+      {
+        "direction": 7,
+        "name": "W",
+        "upside_down": 44,
+        "posed_total": 443,
+        "percent_upside_down": 9.93
+      },
+      {
+        "direction": 8,
+        "name": "NW",
+        "upside_down": 10,
+        "posed_total": 595,
+        "percent_upside_down": 1.68
+      }
+    ],
+    "top_upside_down_examples": [
+      {
+        "image": "frame_000100_fish_03.png",
+        "direction_name": "NW",
+        "pose_confidence": 0.9981
+      },
+      {
+        "image": "frame_000418_fish_03.png",
+        "direction_name": "W",
+        "pose_confidence": 0.9971
+      },
+      {
+        "image": "frame_000340_fish_04.png",
+        "direction_name": "NW",
+        "pose_confidence": 0.9971
+      },
+      {
+        "image": "frame_000144_fish_05.png",
+        "direction_name": "NE",
+        "pose_confidence": 0.9966
+      },
+      {
+        "image": "frame_000145_fish_03.png",
+        "direction_name": "NE",
+        "pose_confidence": 0.9964
+      },
+      {
+        "image": "frame_000426_fish_01.png",
+        "direction_name": "SW",
+        "pose_confidence": 0.9964
+      },
+      {
+        "image": "frame_000184_fish_02.png",
+        "direction_name": "W",
+        "pose_confidence": 0.9962
+      },
+      {
+        "image": "frame_000030_fish_02.png",
+        "direction_name": "NE",
+        "pose_confidence": 0.9958
+      },
+      {
+        "image": "frame_000463_fish_02.png",
+        "direction_name": "NW",
+        "pose_confidence": 0.9951
+      },
+      {
+        "image": "frame_000323_fish_03.png",
+        "direction_name": "NE",
+        "pose_confidence": 0.9948
+      },
+      {
+        "image": "frame_000345_fish_01.png",
+        "direction_name": "W",
+        "pose_confidence": 0.9945
+      },
+      {
+        "image": "frame_000343_fish_00.png",
+        "direction_name": "E",
+        "pose_confidence": 0.9937
+      },
+      {
+        "image": "frame_000525_fish_01.png",
+        "direction_name": "SW",
+        "pose_confidence": 0.9934
+      },
+      {
+        "image": "frame_000199_fish_03.png",
+        "direction_name": "SW",
+        "pose_confidence": 0.9922
+      },
+      {
+        "image": "frame_000533_fish_03.png",
+        "direction_name": "NE",
+        "pose_confidence": 0.992
+      }
+    ]
+  }
+}

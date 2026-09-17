@@ -1,0 +1,13 @@
+{
+  "image": "frame_000493_fish_01.png",
+  "direction": 2,
+  "direction_name": "NE",
+  "direction_confidence": 0.893392026424408,
+  "no_fish_confidence": 0.012580218724906445,
+  "pose": 1,
+  "pose_name": "Upside Down",
+  "pose_confidence": 0.7696707844734192,
+  "raw_pose_prediction": 1,
+  "raw_pose_name": "Upside Down",
+  "raw_pose_confidence": 0.7696707844734192
+}

@@ -1,0 +1,89 @@
+============================================================
+FISH DIRECTION / POSE SUMMARY
+============================================================
+Total crops classified : 4177
+  No fish              : 65  (1.56%)
+  Fish                 : 4112
+Mean direction conf.   : 0.8803
+
+============================================================
+DIRECTION DISTRIBUTION (fish crops)
+============================================================
+dir     count    % fish   mean conf
+N         667     16.22      0.9146
+NE        456     11.09      0.8899
+E         593     14.42      0.8724
+SE        505     12.28      0.9019
+S         528     12.84      0.8233
+SW        325       7.9       0.867
+W         443     10.77       0.866
+NW        595     14.47      0.8928
+
+============================================================
+POSE / UPSIDE-DOWN
+============================================================
+Crops with a pose prediction : 2917
+  Regular (belly down)       : 2684
+  Upside down (belly up)     : 233  (7.99%)
+  Mean upside-down conf.     : 0.9662
+
+Upside-down is confirmed at pose confidence >= 0.85.
+  Pose head flagged 306 crops upside-down; 73 were below the threshold and are counted as regular.
+
+Upside-down confidence (all pose-head upside-down calls):
+  0.50-0.60       25
+  0.60-0.70       17
+  0.70-0.80       24
+  0.80-0.90       18
+  0.90-0.85        0  <- confirmed
+  0.85-1.00      222  <- confirmed
+
+Confirmed upside-down fish appear in 228 distinct frame(s):
+  frame 000013
+  frame 000026
+  frame 000027
+  frame 000030
+  frame 000035
+  frame 000045
+  frame 000056
+  frame 000070
+  frame 000071
+  frame 000072
+  frame 000073
+  frame 000075
+  frame 000076
+  frame 000077
+  frame 000079
+  frame 000080
+  frame 000081
+  frame 000087
+  frame 000088
+  frame 000089
+  ... and 208 more
+
+Upside-down rate by direction:
+  dir      up   posed     % up
+  NE       63     456    13.82
+  E        64     593    10.79
+  SE       10     505     1.98
+  SW       42     325    12.92
+  W        44     443     9.93
+  NW       10     595     1.68
+
+Highest-confidence upside-down crops:
+  frame_000100_fish_03.png         NW   conf=0.9981
+  frame_000418_fish_03.png         W    conf=0.9971
+  frame_000340_fish_04.png         NW   conf=0.9971
+  frame_000144_fish_05.png         NE   conf=0.9966
+  frame_000145_fish_03.png         NE   conf=0.9964
+  frame_000426_fish_01.png         SW   conf=0.9964
+  frame_000184_fish_02.png         W    conf=0.9962
+  frame_000030_fish_02.png         NE   conf=0.9958
+  frame_000463_fish_02.png         NW   conf=0.9951
+  frame_000323_fish_03.png         NE   conf=0.9948
+  frame_000345_fish_01.png         W    conf=0.9945
+  frame_000343_fish_00.png         E    conf=0.9937
+  frame_000525_fish_01.png         SW   conf=0.9934
+  frame_000199_fish_03.png         SW   conf=0.9922
+  frame_000533_fish_03.png         NE   conf=0.992
+

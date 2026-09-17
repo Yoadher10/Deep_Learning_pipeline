@@ -1,0 +1,13 @@
+{
+  "image": "frame_000023_fish_01.png",
+  "direction": 8,
+  "direction_name": "NW",
+  "direction_confidence": 0.907507598400116,
+  "no_fish_confidence": 0.0061288634315133095,
+  "pose": 0,
+  "pose_name": "Regular",
+  "pose_confidence": 0.9907957911491394,
+  "raw_pose_prediction": 0,
+  "raw_pose_name": "Regular",
+  "raw_pose_confidence": 0.9907957911491394
+}

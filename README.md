@@ -70,6 +70,10 @@ full_pipeline/
 │   ├── review_analysis.py           turn those reviews into accuracy numbers
 │   └── check_batches.py             find batches with zero valid pose labels
 │
+├── demo/
+│   ├── demo_clip.mp4                30 s of aquarium footage to run on
+│   └── premade_run/                 a finished run of that video, ready to open
+│
 └── appendix_photos/                 screenshots + result charts (see Appendix)
 ```
 
@@ -115,6 +119,61 @@ Quick check that MPS is visible to your interpreter:
 ```bash
 python -c "import torch; print(torch.backends.mps.is_available())"
 ```
+
+---
+
+## Try it on the bundled demo
+
+`demo/` ships everything needed to see the pipeline work without supplying a
+video or configuring anything.
+
+**`demo/demo_clip.mp4`** — 30 seconds of the aquarium footage the models were
+evaluated on, at the native 1920×1080 / 25 fps (8 MB). It is a deliberately
+busy stretch: at 3 fps it yields ~328 fish crops and it contains confident
+upside-down calls, so the rare class is actually exercised rather than being a
+footnote.
+
+```bash
+python run_pipeline_gui.py          # then Browse… to demo/demo_clip.mp4
+```
+
+Or from the command line:
+
+```bash
+python phase0_frame_extraction/extract_frames.py --video demo/demo_clip.mp4 --fps 3 --output /tmp/run/frames
+python phase1_fish_detection/detect_and_crop_rois.py --input /tmp/run/frames --output /tmp/run/rois
+python phase2_direction_pose_inference/run_classifier.py --images /tmp/run/rois --output /tmp/run/predictions
+python phase3_analysis/summarize_predictions.py --predictions /tmp/run/predictions --charts-dir /tmp/run/charts \
+    --out-json /tmp/run/summary.json --out-txt /tmp/run/summary.txt
+```
+
+**`demo/premade_run/`** — a *finished* run of the full 822-second video (4177
+crops), so the analysis and review tooling can be used immediately, with no
+GPU and no waiting:
+
+```bash
+# the aggregate report and charts, recomputed from the saved predictions
+python phase3_analysis/summarize_predictions.py --predictions demo/premade_run/predictions \
+    --charts-dir /tmp/charts --out-json /tmp/summary.json --out-txt /tmp/summary.txt
+
+# review its predictions crop by crop, class-stratified
+python evaluation/review_predictions_gui.py --run demo/premade_run \
+    --split-dir demo/premade_run/sorted_by_class_0.85
+
+# re-sort the crops at a different confidence threshold
+python dataset_ops/sort_crops_by_class.py --rois demo/premade_run/rois \
+    --predictions demo/premade_run/predictions --output /tmp/sorted --upside-conf-threshold 0.9
+```
+
+It contains `rois/` (4177 crops), `rois_ignored_background/` (the 82 the
+background filter rejected), `predictions/`, `boxes.csv`,
+`median_background.png`, `sorted_by_class_0.85/`, `charts/` and the summaries —
+everything except `frames/`. The raw PNG frames are omitted deliberately: they
+are 1.2 GB of decompressed video and nothing but phase 1 reads them. Every
+other phase and every review tool works without them; to redo phase 1, run it
+on `demo_clip.mp4` instead.
+
+The figures quoted throughout the Appendix come from this run.
 
 ---
 
@@ -484,8 +543,10 @@ python evaluation/review_analysis.py --reviews-dir /path/to/run/reviews \
 - `phase6`–`phase8` in the old layout were empty and were removed.
 - Training data and past training bundles live in `../pipeline_archive/`, not in
   this tree.
-- **This folder ships code, trained weights and `appendix_photos/` only.** No
-  videos, no frame/ROI/prediction data, no `.venv/`. Create a venv from `requirements.txt` and point
+- **This folder ships code, trained weights, `appendix_photos/` and `demo/`.**
+  No full-length videos, no extracted frames, no `.venv/`. The only committed
+  video is the 8 MB `demo/demo_clip.mp4` (see *Try it on the bundled demo*);
+  `.gitignore` still excludes `*.mp4` everywhere else. Create a venv from `requirements.txt` and point
   `FISH_PIPELINE_DATA` at your own data folder (or just run the GUI on a video —
   it makes `data/runs/<name>_<timestamp>/` for you).
 - `phase2_direction_pose_inference/weights/best_model_v7.pt` is the

@@ -21,6 +21,11 @@ data/
 *.mov
 *.avi
 
+# ...except the bundled demo clip, which is small (~8 MB) and deliberately
+# committed so the pipeline can be run end-to-end straight after cloning.
+# See README.md "Try it on the bundled demo".
+!demo/demo_clip.mp4
+
 # Editor/IDE
 .vscode/
 .idea/
