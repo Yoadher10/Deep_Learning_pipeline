@@ -1,6 +1,27 @@
 #!/usr/bin/env python3
+"""
+Train the multi-task Fish ViT: one ViT backbone with a 9-class direction head
+and a 2-class pose head.
+
+Reads the splits built by split_dataset.py, trains with early stopping on
+validation loss, saves every improving epoch to ``good_epochs/`` and the best
+one to the checkpoint path, then evaluates that best checkpoint on the test
+split.
+
+Usage:
+    python model_training/direction_classifier/train.py
+    python model_training/direction_classifier/train.py --batch-size 16 --epochs 40
+    python model_training/direction_classifier/train.py \
+        --images /path/to/trainset/images \
+        --splits-dir /path/to/trainset/splits \
+        --output-dir /path/to/vit_fish_output
+
+All path defaults come from config.py (i.e. from $FISH_PIPELINE_DATA); the
+flags exist for one-off runs that do not match that layout.
+"""
 
 import sys
+import argparse
 from pathlib import Path
 import time
 
@@ -21,6 +42,10 @@ from dataset import create_datasets, MODEL_NAME
 # ============================================================
 # Configuration
 # ============================================================
+#
+# These are the defaults. main() overwrites the ones that have a matching
+# command-line flag (see parse_args) before any of them is read, so a flag
+# and the default are interchangeable everywhere below.
 
 # 64 fits an 8 GB GPU (~6 GB peak); drop to 16-32 on smaller cards.
 BATCH_SIZE = 64
@@ -45,6 +70,10 @@ BEST_MODEL_PATH = OUTPUT_DIR / "best_model_v7.pt"
 
 # Every epoch that improves validation loss is also saved here.
 GOOD_EPOCHS_DIR = OUTPUT_DIR / "good_epochs"
+
+# Dataset location; overridable with --images / --splits-dir.
+IMAGES_DIR = config.TRAINSET_IMAGES
+SPLITS_DIR = config.SPLITS_DIR
 
 
 DIRECTION_NAMES = {
@@ -972,7 +1001,131 @@ def create_checkpoint(
 # Main
 # ============================================================
 
-def main():
+def parse_args(argv=None):
+    parser = argparse.ArgumentParser(
+        description=(
+            "Train the multi-task (direction + pose) Fish ViT classifier."
+        ),
+    )
+
+    parser.add_argument(
+        "--images",
+        type=Path,
+        default=IMAGES_DIR,
+        help="Folder of training crops (default: %(default)s)",
+    )
+    parser.add_argument(
+        "--splits-dir",
+        type=Path,
+        default=SPLITS_DIR,
+        help=(
+            "Folder holding train.csv / val.csv / test.csv, as written by "
+            "split_dataset.py (default: %(default)s)"
+        ),
+    )
+    parser.add_argument(
+        "--output-dir",
+        type=Path,
+        default=OUTPUT_DIR,
+        help=(
+            "Where checkpoints and good_epochs/ are written "
+            "(default: %(default)s)"
+        ),
+    )
+    parser.add_argument(
+        "--checkpoint-name",
+        default=BEST_MODEL_PATH.name,
+        help=(
+            "Filename of the best-epoch checkpoint inside --output-dir "
+            "(default: %(default)s)"
+        ),
+    )
+
+    parser.add_argument(
+        "--batch-size",
+        type=int,
+        default=BATCH_SIZE,
+        help=(
+            "64 needs ~6 GB of VRAM; drop to 16-32 on smaller cards "
+            "(default: %(default)s)"
+        ),
+    )
+    parser.add_argument(
+        "--epochs",
+        type=int,
+        default=NUM_EPOCHS,
+        help="Maximum epochs; early stopping usually ends sooner "
+             "(default: %(default)s)",
+    )
+    parser.add_argument(
+        "--patience",
+        type=int,
+        default=PATIENCE,
+        help="Epochs without validation improvement before stopping "
+             "(default: %(default)s)",
+    )
+    parser.add_argument(
+        "--learning-rate",
+        type=float,
+        default=LEARNING_RATE,
+        help="AdamW learning rate (default: %(default)s)",
+    )
+    parser.add_argument(
+        "--weight-decay",
+        type=float,
+        default=WEIGHT_DECAY,
+        help="AdamW weight decay (default: %(default)s)",
+    )
+    parser.add_argument(
+        "--pose-weights",
+        default=",".join(str(w) for w in POSE_CLASS_WEIGHTS),
+        help=(
+            "Comma-separated class weights for the pose head, "
+            "regular,upside_down (default: %(default)s)"
+        ),
+    )
+
+    return parser.parse_args(argv)
+
+
+def apply_args(args):
+    """
+    Push the parsed flags onto the module-level configuration constants.
+
+    The training functions below read those constants directly, so this is
+    what makes a flag and its default interchangeable.
+    """
+    global IMAGES_DIR, SPLITS_DIR, OUTPUT_DIR
+    global BEST_MODEL_PATH, GOOD_EPOCHS_DIR
+    global BATCH_SIZE, NUM_EPOCHS, PATIENCE
+    global LEARNING_RATE, WEIGHT_DECAY, POSE_CLASS_WEIGHTS
+
+    IMAGES_DIR = args.images
+    SPLITS_DIR = args.splits_dir
+
+    OUTPUT_DIR = args.output_dir
+    BEST_MODEL_PATH = OUTPUT_DIR / args.checkpoint_name
+    GOOD_EPOCHS_DIR = OUTPUT_DIR / "good_epochs"
+
+    BATCH_SIZE = args.batch_size
+    NUM_EPOCHS = args.epochs
+    PATIENCE = args.patience
+    LEARNING_RATE = args.learning_rate
+    WEIGHT_DECAY = args.weight_decay
+
+    POSE_CLASS_WEIGHTS = [
+        float(w) for w in str(args.pose_weights).split(",") if w.strip()
+    ]
+
+    if len(POSE_CLASS_WEIGHTS) != NUM_POSE_CLASSES:
+        raise SystemExit(
+            f"--pose-weights needs {NUM_POSE_CLASSES} comma-separated "
+            f"values, got: {args.pose_weights}"
+        )
+
+
+def main(argv=None):
+    apply_args(parse_args(argv))
 
     script_start_time = time.perf_counter()
 
@@ -1007,7 +1160,10 @@ def main():
         val_dataset,
         test_dataset,
         _,
-    ) = create_datasets()
+    ) = create_datasets(
+        images_dir=IMAGES_DIR,
+        splits_dir=SPLITS_DIR,
+    )
 
     train_loader = DataLoader(
         train_dataset,

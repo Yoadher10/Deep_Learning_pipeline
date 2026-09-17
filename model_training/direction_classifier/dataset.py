@@ -1,4 +1,16 @@
 #!/usr/bin/env python3
+"""
+Shared torch Dataset for the multi-task (direction + pose) Fish ViT.
+
+Imported by model_training/direction_classifier/train.py and by
+evaluation/validation_error_analysis.py; it is not a CLI entry point, so its
+paths come from config.py rather than from flags. Callers that need different
+folders pass them to ``create_datasets(images_dir=..., splits_dir=...)`` —
+that is how those two scripts forward their own --images / --splits-dir flags.
+
+Running this file directly performs a small sanity check: it builds the three
+splits and prints the shape and labels of one training sample.
+"""
 
 import sys
 from pathlib import Path
@@ -190,28 +202,45 @@ class FishViTDataset(Dataset):
 
 def create_datasets(
     model_name=MODEL_NAME,
+    images_dir=None,
+    splits_dir=None,
 ):
+    """
+    Build the train / val / test datasets and the shared image processor.
+
+    ``images_dir`` and ``splits_dir`` default to config.TRAINSET_IMAGES and
+    config.SPLITS_DIR; scripts with their own --images / --splits-dir flags
+    pass those values through here. ``splits_dir`` is expected to contain
+    train.csv, val.csv and test.csv.
+    """
+    images_dir = Path(images_dir) if images_dir else IMAGES_DIR
+    splits_dir = Path(splits_dir) if splits_dir else SPLITS_DIR
+
+    train_csv = splits_dir / "train.csv"
+    val_csv = splits_dir / "val.csv"
+    test_csv = splits_dir / "test.csv"
+
     image_processor = AutoImageProcessor.from_pretrained(
         model_name
     )
 
     train_dataset = FishViTDataset(
-        csv_path=TRAIN_CSV,
-        images_dir=IMAGES_DIR,
+        csv_path=train_csv,
+        images_dir=images_dir,
         image_processor=image_processor,
         train=True,
     )
 
     val_dataset = FishViTDataset(
-        csv_path=VAL_CSV,
-        images_dir=IMAGES_DIR,
+        csv_path=val_csv,
+        images_dir=images_dir,
         image_processor=image_processor,
         train=False,
     )
 
     test_dataset = FishViTDataset(
-        csv_path=TEST_CSV,
-        images_dir=IMAGES_DIR,
+        csv_path=test_csv,
+        images_dir=images_dir,
         image_processor=image_processor,
         train=False,
     )

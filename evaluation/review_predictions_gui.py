@@ -66,6 +66,14 @@ Image order:
         python review_predictions_gui.py --split-dir             # this run's own sorted_by_class/
         python review_predictions_gui.py --split-dir sorted_by_class_0.85
 
+Choosing the run:
+    --run RUN_DIR points at the folder holding rois/, predictions/ and
+    boxes.csv; reviews/ and review_summary.json are written inside it. It
+    defaults to the config.py data root, so setting FISH_PIPELINE_DATA works
+    just as well.
+
+        python review_predictions_gui.py --run data/runs/clip_20260917-160002
+
 Why both direction and presence reviews exist:
     V/A/X measure direction quality only when the model produced a fish
     direction and a real fish is present. For a raw No Fish prediction (or a
@@ -100,8 +108,12 @@ import config
 
 
 # ============================================================
-# Paths (see config.py)
+# Paths (defaults from config.py)
 # ============================================================
+#
+# Everything here hangs off one run folder. main() rebinds the whole block
+# from --run before any of it is read, so the flag and the config defaults are
+# interchangeable throughout.
 
 IMAGES_DIR = config.ROIS_DIR
 PREDICTIONS_DIR = config.PREDICTIONS_DIR
@@ -121,6 +133,24 @@ BOXES_CSV = RUN_DIR / "boxes.csv"
 
 # Default --split-dir target: dataset_ops/sort_crops_by_class.py's output.
 DEFAULT_SPLIT_DIR = RUN_DIR / "sorted_by_class"
+
+
+def set_run_dir(run_dir):
+    """
+    Point every path above at ``run_dir`` (a data root, or one timestamped
+    folder under runs/). This is what --run does.
+    """
+    global RUN_DIR, IMAGES_DIR, PREDICTIONS_DIR, REVIEWS_DIR
+    global SUMMARY_PATH, BACKGROUND_REJECTED_DIR, BOXES_CSV, DEFAULT_SPLIT_DIR
+
+    RUN_DIR = Path(run_dir)
+    IMAGES_DIR = RUN_DIR / "rois"
+    PREDICTIONS_DIR = RUN_DIR / "predictions"
+    REVIEWS_DIR = RUN_DIR / "reviews"
+    SUMMARY_PATH = RUN_DIR / "review_summary.json"
+    BACKGROUND_REJECTED_DIR = RUN_DIR / "rois_ignored_background"
+    BOXES_CSV = RUN_DIR / "boxes.csv"
+    DEFAULT_SPLIT_DIR = RUN_DIR / "sorted_by_class"
 
 
 # ============================================================
@@ -1915,16 +1945,31 @@ class InferenceReviewer:
 # Main
 # ============================================================
 
+# Marker for "--split-dir was passed with no path", resolved after --run is
+# known (the run folder decides where the default sorted_by_class/ lives).
+_USE_RUN_SPLIT_DIR = Path("<run>/sorted_by_class")
+
+
 def main():
     parser = argparse.ArgumentParser(
         description=__doc__,
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
     parser.add_argument(
+        "--run",
+        type=Path,
+        default=RUN_DIR,
+        help=(
+            "The run folder to review: the one holding rois/, predictions/ "
+            "and boxes.csv. reviews/ and review_summary.json are written "
+            "inside it (default: %(default)s)"
+        ),
+    )
+    parser.add_argument(
         "--split-dir",
         type=Path,
         nargs="?",
-        const=DEFAULT_SPLIT_DIR,
+        const=_USE_RUN_SPLIT_DIR,
         default=None,
         metavar="DIR",
         help=(
@@ -1936,11 +1981,17 @@ def main():
             "within it, instead of a random image from the whole pool. Rare "
             "classes get the same attention as common ones, so a small "
             "review session sees real variation. Pass with no path to use "
-            f"the run's own sorted_by_class/ ({DEFAULT_SPLIT_DIR}), or give "
-            "a specific folder (e.g. sorted_by_class_0.85/)."
+            "the run's own sorted_by_class/, or give a specific folder "
+            "(e.g. sorted_by_class_0.85/)."
         ),
     )
     args = parser.parse_args()
+
+    set_run_dir(args.run)
+
+    split_dir = args.split_dir
+    if split_dir == _USE_RUN_SPLIT_DIR:
+        split_dir = DEFAULT_SPLIT_DIR
 
     if not IMAGES_DIR.exists():
         raise FileNotFoundError(
@@ -1954,7 +2005,7 @@ def main():
         )
 
     root = tk.Tk()
-    InferenceReviewer(root, split_dir=args.split_dir)
+    InferenceReviewer(root, split_dir=split_dir)
     root.mainloop()
 
 

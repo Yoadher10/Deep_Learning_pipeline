@@ -1,3 +1,26 @@
+#!/usr/bin/env python3
+"""
+Phase 1: run the fine-tuned YOLOv8 fish detector over every frame and write one
+PNG crop (ROI) per detection, named ``frame_000123_fish_00.png``.
+
+Detections are additionally screened against a per-video median background
+image: anything that matches the static background closely enough is coral,
+plant or equipment rather than a fish, and is diverted to
+``rois_ignored_background/`` instead of ``rois/`` (see config.BACKGROUND_*).
+Every box, kept or rejected, is logged to ``boxes.csv`` with its match
+percentage, so the threshold can be re-tuned afterwards with
+dataset_ops/background_match_filter.py without re-running YOLO.
+
+Usage:
+    python phase1_fish_detection/detect_and_crop_rois.py
+    python phase1_fish_detection/detect_and_crop_rois.py \
+        --input /path/to/frames --output /path/to/rois
+    python phase1_fish_detection/detect_and_crop_rois.py --no-bg-filter
+
+Defaults come from config.py: --input $FISH_PIPELINE_DATA/frames,
+--output $FISH_PIPELINE_DATA/rois, --weights the bundled detector.
+"""
+
 import sys
 from pathlib import Path
 

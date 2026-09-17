@@ -1,3 +1,20 @@
+#!/usr/bin/env python3
+"""
+Train the YOLOv8 fish detector used by phase 1.
+
+Ultralytics needs a data.yaml describing the train/val image folders and the
+class names. Copy data.yaml.example to data.yaml next to this script and edit
+it, or point --data somewhere else.
+
+Usage:
+    python model_training/fish_detector/train_yolo.py
+    python model_training/fish_detector/train_yolo.py --data /path/to/data.yaml
+    python model_training/fish_detector/train_yolo.py --imgsz 1024 --batch 8
+
+Weights land in Ultralytics' own runs/ folder; the path is printed at the end.
+Copy the best.pt over phase1_fish_detection/weights/ to use it in the pipeline.
+"""
+
 import argparse
 from pathlib import Path
 

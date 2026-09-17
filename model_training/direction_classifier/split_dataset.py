@@ -1,4 +1,27 @@
 #!/usr/bin/env python3
+"""
+Step 2 of ViT training: split manifest.csv into train / val / test CSVs.
+
+The split is by *temporal chunk*, not by row. Consecutive video frames are
+nearly identical, so a random per-crop split would put near-copies of the same
+fish in both train and test and report an accuracy the model does not have.
+Frames are therefore grouped into blocks of CHUNK_SIZE_FRAMES and whole chunks
+are assigned to a split, which removes that leakage.
+
+Because upside-down fish are rare and clustered in time, a purely random chunk
+assignment easily starves the validation or test split of them. The script
+searches many random chunk assignments and keeps the one that lands closest to
+the target 70/15/15 ratio while still meeting the MIN_UPSIDE_* floors.
+
+Usage:
+    python model_training/direction_classifier/split_dataset.py
+    python model_training/direction_classifier/split_dataset.py \
+        --manifest /path/to/trainset/manifest.csv \
+        --splits-dir /path/to/trainset/splits
+
+Defaults come from config.py (i.e. from $FISH_PIPELINE_DATA). The split is
+seeded with RANDOM_SEED, so re-running it reproduces the same three CSVs.
+"""
 
 import sys
 import csv

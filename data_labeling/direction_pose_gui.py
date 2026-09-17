@@ -21,12 +21,29 @@ Pose keys (after selecting direction):
 Other:
   Space / Right = Skip
   u = Undo last label
+
+Images are drawn at random from the source folder, skipping any that already
+have a label JSON, so the session is resumable and several passes never
+re-label the same crop.
+
+Usage:
+  python data_labeling/direction_pose_gui.py
+      Opens a folder picker, starting at $FISH_PIPELINE_DATA/rois. Labels are
+      written to a "labels" folder beside the chosen image folder.
+
+  python data_labeling/direction_pose_gui.py --images /path/to/crops
+      Skips the picker and uses that folder.
+
+  python data_labeling/direction_pose_gui.py --images /path/to/crops \
+                                             --labels /path/to/labels
+      Also overrides where the label JSONs are written.
 """
 
 import sys
 import json
 import math
 import random
+import argparse
 from pathlib import Path
 import tkinter as tk
 from tkinter import filedialog, messagebox
@@ -86,7 +103,12 @@ COMPASS_W, COMPASS_H = 290, 350
 
 
 class FishLabeler:
-    def __init__(self, root: tk.Tk):
+    def __init__(self, root: tk.Tk, images_dir: Path = None,
+                 labels_dir: Path = None):
+        # When images_dir is given (--images) the folder picker is skipped.
+        self._preset_images = images_dir
+        self._preset_labels = labels_dir
+
         self.root = root
         self.root.title("Fish Photo Labeler")
         self.root.configure(bg='#1e1e2e')
@@ -195,15 +217,29 @@ class FishLabeler:
     # ------------------------------------------------------------------ Folder / pool
 
     def _select_folder(self):
-        folder = filedialog.askdirectory(
-            title="Select source image folder", initialdir=_INITIAL_DIR)
-        if not folder:
-            self.root.destroy()
-            return
+        if self._preset_images is not None:
+            self.source_folder = self._preset_images
+            if not self.source_folder.is_dir():
+                messagebox.showerror(
+                    "Folder not found",
+                    f"Image folder does not exist:\n\n{self.source_folder}")
+                self.root.destroy()
+                return
+        else:
+            folder = filedialog.askdirectory(
+                title="Select source image folder", initialdir=_INITIAL_DIR)
+            if not folder:
+                self.root.destroy()
+                return
+            self.source_folder = Path(folder)
 
-        self.source_folder = Path(folder)
-        self.labels_folder = self.source_folder.parent / 'labels'
-        self.labels_folder.mkdir(exist_ok=True)
+        # Labels default to a "labels" folder beside the image folder.
+        self.labels_folder = (
+            self._preset_labels
+            if self._preset_labels is not None
+            else self.source_folder.parent / 'labels'
+        )
+        self.labels_folder.mkdir(parents=True, exist_ok=True)
 
         self._load_pool()
 
@@ -440,7 +476,34 @@ class FishLabeler:
 
 # ------------------------------------------------------------------ Entry point
 
-def main():
+def parse_args(argv=None):
+    parser = argparse.ArgumentParser(
+        description="Label fish crops with a swimming direction and a pose.",
+    )
+    parser.add_argument(
+        "--images",
+        type=Path,
+        default=None,
+        help=(
+            "Folder of crops to label. Omit to pick one in a dialog "
+            "(starting at $FISH_PIPELINE_DATA/rois)."
+        ),
+    )
+    parser.add_argument(
+        "--labels",
+        type=Path,
+        default=None,
+        help=(
+            "Where label JSONs are written "
+            "(default: a 'labels' folder beside the image folder)."
+        ),
+    )
+    return parser.parse_args(argv)
+
+
+def main(argv=None):
+    args = parse_args(argv)
+
     root = tk.Tk()
 
     if not HAS_PIL:
@@ -451,7 +514,7 @@ def main():
         root.destroy()
         return
 
-    FishLabeler(root)
+    FishLabeler(root, images_dir=args.images, labels_dir=args.labels)
     root.mainloop()
 
 

@@ -1,4 +1,29 @@
 #!/usr/bin/env python3
+"""
+Step 1 of ViT training: fold the per-crop label JSONs into one manifest.csv.
+
+Walks the training-set label folder, pairs each JSON with its image, converts
+the raw label values into training targets, and writes one CSV row per usable
+sample with the columns train.py and dataset.py expect:
+
+    image, frame_id, direction_target, pose_target
+
+The raw pose values (0 = N/A, 1 = Regular, 2 = Upside Down) become
+-100 / 0 / 1, where -100 is torch's ignore_index -- that is how samples whose
+direction makes pose meaningless (No Fish / N / S) are excluded from the pose
+loss without being dropped from direction training. ``frame_id`` is parsed out
+of the filename and is what split_dataset.py groups on to keep crops from the
+same frame in the same split.
+
+Usage:
+    python model_training/direction_classifier/build_manifest.py
+    python model_training/direction_classifier/build_manifest.py \
+        --images /path/to/trainset/images \
+        --labels /path/to/trainset/labels \
+        --output /path/to/trainset/manifest.csv
+
+Defaults come from config.py (i.e. from $FISH_PIPELINE_DATA).
+"""
 
 import sys
 import csv

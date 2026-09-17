@@ -1,8 +1,35 @@
 #!/usr/bin/env python3
+"""
+Score a trained ViT checkpoint against the held-out validation split and write
+out everything needed to see *how* it fails.
+
+Unlike evaluation/review_predictions_gui.py, this needs ground-truth labels, so
+it only works on a labelled split built by split_dataset.py -- not on a fresh
+pipeline run. It writes, under <output-dir>:
+
+    validation_predictions.csv      per-sample truth vs. prediction
+    direction_confusion_matrix.csv  9x9 direction confusion matrix
+    pose_confusion_matrix.csv       2x2 pose confusion matrix
+    direction_errors/               copies of every misclassified crop
+    pose_errors/                    likewise for pose
+
+The output folder is wiped on each run so stale errors never linger.
+
+Usage:
+    python evaluation/validation_error_analysis.py
+    python evaluation/validation_error_analysis.py --weights /path/to/best_model_v7.pt
+    python evaluation/validation_error_analysis.py \
+        --images /path/to/trainset/images \
+        --splits-dir /path/to/trainset/splits \
+        --output-dir /path/to/analysis
+
+All path defaults come from config.py (i.e. from $FISH_PIPELINE_DATA).
+"""
 
 import sys
 import csv
 import shutil
+import argparse
 from pathlib import Path
 
 for _p in Path(__file__).resolve().parents:
@@ -23,8 +50,11 @@ from train import MultiTaskFishViT
 
 
 # ============================================================
-# Configuration (see config.py)
+# Configuration (defaults from config.py)
 # ============================================================
+#
+# main() overwrites these from the command-line flags before anything reads
+# them, so a flag and the default below are interchangeable throughout.
 
 BEST_MODEL_PATH = config.VIT_WEIGHTS
 
@@ -42,6 +72,11 @@ DIRECTION_CM_CSV = (
 POSE_CM_CSV = (
     OUTPUT_DIR / "pose_confusion_matrix.csv"
 )
+
+# Dataset location; overridable with --images / --splits-dir.
+# IMAGES_DIR is imported from dataset.py (config.TRAINSET_IMAGES) and is what
+# the error-copying code reads, so --images rebinds it here.
+SPLITS_DIR = config.SPLITS_DIR
 
 BATCH_SIZE = 16
 
@@ -153,8 +188,77 @@ def save_confusion_matrix(
 # Main
 # ============================================================
 
+def parse_args(argv=None):
+    parser = argparse.ArgumentParser(
+        description=(
+            "Confusion matrices and misclassified-crop dumps for a trained "
+            "ViT checkpoint, against the held-out validation split."
+        ),
+    )
+    parser.add_argument(
+        "--weights",
+        type=Path,
+        default=BEST_MODEL_PATH,
+        help="ViT checkpoint to evaluate (default: %(default)s)",
+    )
+    parser.add_argument(
+        "--images",
+        type=Path,
+        default=IMAGES_DIR,
+        help=(
+            "Folder the split CSVs' image names resolve against "
+            "(default: %(default)s)"
+        ),
+    )
+    parser.add_argument(
+        "--splits-dir",
+        type=Path,
+        default=SPLITS_DIR,
+        help=(
+            "Folder holding train.csv / val.csv / test.csv "
+            "(default: %(default)s)"
+        ),
+    )
+    parser.add_argument(
+        "--output-dir",
+        type=Path,
+        default=OUTPUT_DIR,
+        help=(
+            "Where the CSVs and error crops are written. WIPED on each run "
+            "(default: %(default)s)"
+        ),
+    )
+    parser.add_argument(
+        "--batch-size",
+        type=int,
+        default=BATCH_SIZE,
+        help="Inference batch size (default: %(default)s)",
+    )
+    return parser.parse_args(argv)
+
+
+def apply_args(args):
+    """Push the parsed flags onto the module-level configuration constants."""
+    global BEST_MODEL_PATH, IMAGES_DIR, SPLITS_DIR, BATCH_SIZE
+    global OUTPUT_DIR, DIRECTION_ERRORS_DIR, POSE_ERRORS_DIR
+    global PREDICTIONS_CSV, DIRECTION_CM_CSV, POSE_CM_CSV
+
+    BEST_MODEL_PATH = args.weights
+    IMAGES_DIR = args.images
+    SPLITS_DIR = args.splits_dir
+    BATCH_SIZE = args.batch_size
+
+    OUTPUT_DIR = args.output_dir
+    DIRECTION_ERRORS_DIR = OUTPUT_DIR / "direction_errors"
+    POSE_ERRORS_DIR = OUTPUT_DIR / "pose_errors"
+    PREDICTIONS_CSV = OUTPUT_DIR / "validation_predictions.csv"
+    DIRECTION_CM_CSV = OUTPUT_DIR / "direction_confusion_matrix.csv"
+    POSE_CM_CSV = OUTPUT_DIR / "pose_confusion_matrix.csv"
+
+
 @torch.no_grad()
-def main():
+def main(argv=None):
+    apply_args(parse_args(argv))
 
     device = get_device()
 
@@ -193,7 +297,10 @@ def main():
         val_dataset,
         _,
         _,
-    ) = create_datasets()
+    ) = create_datasets(
+        images_dir=IMAGES_DIR,
+        splits_dir=SPLITS_DIR,
+    )
 
     val_loader = DataLoader(
         val_dataset,

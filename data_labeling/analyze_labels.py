@@ -1,7 +1,23 @@
 #!/usr/bin/env python3
+"""
+Report the class distribution and label validity of a folder of manual
+direction/pose label JSONs (the output of data_labeling/direction_pose_gui.py).
+
+Prints the direction distribution, the raw and pose-applicable pose
+distributions, the direction x pose cross-tab, and a validation section
+listing malformed files, out-of-range values, and (direction, pose) pairs
+that break the labeling rules (see is_valid_combination).
+
+Usage:
+    python data_labeling/analyze_labels.py
+    python data_labeling/analyze_labels.py --labels /path/to/labels
+
+Defaults come from config.LABELS_DIR (i.e. $FISH_PIPELINE_DATA/labels).
+"""
 
 import sys
 import json
+import argparse
 from pathlib import Path
 from collections import Counter
 
@@ -10,10 +26,6 @@ for _p in Path(__file__).resolve().parents:
         sys.path.insert(0, str(_p))
         break
 import config
-
-# Folder of manual label JSONs to analyse. Override with:
-#     python analyze_labels.py /path/to/labels
-LABELS_DIR = Path(sys.argv[1]) if len(sys.argv) > 1 else config.LABELS_DIR
 
 DIRECTION_NAMES = {
     0: "No Fish",
@@ -52,8 +64,30 @@ def is_valid_combination(direction, pose):
     return pose in {1, 2}
 
 
-def main():
-    json_files = sorted(LABELS_DIR.glob("*.json"))
+def parse_args(argv=None):
+    parser = argparse.ArgumentParser(
+        description=(
+            "Class distribution + label-validity report for a folder of "
+            "manual direction/pose label JSONs."
+        )
+    )
+    parser.add_argument(
+        "--labels",
+        type=Path,
+        default=config.LABELS_DIR,
+        help="Folder of label JSONs (default: %(default)s)",
+    )
+    return parser.parse_args(argv)
+
+
+def main(argv=None):
+    args = parse_args(argv)
+    labels_dir = args.labels
+
+    if not labels_dir.is_dir():
+        raise SystemExit(f"Labels folder not found: {labels_dir}")
+
+    json_files = sorted(labels_dir.glob("*.json"))
 
     direction_counts = Counter()
     pose_counts = Counter()
@@ -95,7 +129,7 @@ def main():
     print("DATASET SUMMARY")
     print("=" * 70)
 
-    print(f"Folder:             {LABELS_DIR}")
+    print(f"Folder:             {labels_dir}")
     print(f"JSON files found:   {len(json_files)}")
     print(f"Valid labels:       {valid_samples}")
     print(f"Malformed files:    {len(malformed_files)}")

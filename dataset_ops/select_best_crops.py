@@ -1,3 +1,27 @@
+#!/usr/bin/env python3
+"""
+Score a folder of crops by visual quality and copy the best ones out.
+
+Phase 1 produces far more crops than are worth labelling by hand, and many are
+blurred, near-black or near-duplicates of the frame before. This ranks every
+image on sharpness, exposure and contrast, drops exact-duplicate files (by
+SHA-256) and optionally anything visually close to a set of reference images,
+and copies the top N into the output folder along with a CSV of the scores.
+
+Typical use is narrowing a raw ROI dump down to a labelling batch:
+
+    python dataset_ops/select_best_crops.py \
+        --input /path/to/rois --output /path/to/label_batch --top-n 5000
+
+    # also drop anything that looks like these known-bad crops
+    python dataset_ops/select_best_crops.py \
+        --input /path/to/rois --output /path/to/label_batch \
+        --exclude-similar-to blurry.png --exclude-similar-to empty_tank.png
+
+--input and --output are required; this tool is deliberately not wired to
+config.py, since it is run on arbitrary ad-hoc folders.
+"""
+
 import argparse
 import csv
 import hashlib
